@@ -1,0 +1,199 @@
+/*Base Styles */
+body {
+  font-family: "VT323", system-ui;
+  font-size: 22px;
+  background: #001a1a; /* very dark teal */
+  color: #00ffd5;
+}
+
+h1 {
+  margin-top: 10px;
+  font-family: "Press Start 2P", system-ui;
+  font-size: 20px;
+}
+
+img {
+  max-width: 300px;
+  height: 300px;
+}
+
+.container {
+  margin-top: 20px;
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  max-width: 100%;
+}
+
+.tama-div {
+  border: 2px solid #00ffd5;
+  box-shadow:
+    0 0 8px rgba(0, 255, 213, 0.5),
+    inset 0 0 8px rgba(0, 255, 213, 0.15);
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 4px;
+}
+
+.tama-div p {
+  margin: 5px 0;
+}
+
+.tama-div p:last-of-type {
+  margin-bottom: 20px;
+}
+
+.activity-container {
+  height: 200px;
+  overflow: auto;
+  /* width: 70%; */
+  max-width: 1340px;
+  margin: 10px auto;
+  padding: 0 7px;
+  border: 2px solid #00ffd5;
+  box-shadow:
+    0 0 6px rgba(0, 255, 213, 0.5),
+    inset 0 0 6px rgba(0, 255, 213, 0.15);
+  border-radius: 4px;
+  display: none;
+}
+
+.legend {
+  position: absolute;
+  left: 50px;
+  top: 73px;
+  border: 2px solid #00ffd5;
+  box-shadow:
+    0 0 6px rgba(0, 255, 213, 0.5),
+    inset 0 0 6px rgba(0, 255, 213, 0.15);
+  padding: 10px;
+  border-radius: 4px;
+}
+
+.legend p {
+  margin: 5px 0;
+  font-size: 22px;
+}
+
+.legend p span {
+  display: flex;
+  flex-direction: column;
+}
+
+.leaving-msg {
+  color: #ff6a3d;
+  text-shadow: 0 0 4px rgba(255, 106, 61, 0.5);
+}
+
+/* Buttons */
+
+button {
+  font-family: "VT323", monospace;
+  background: #001a1a;
+  color: #00ffd5;
+  border: 2px solid #00ffd5;
+  box-shadow:
+    0 0 6px rgba(0, 255, 213, 0.5),
+    inset 0 0 6px rgba(0, 255, 213, 0.25);
+  text-shadow: 0 0 2px currentColor;
+  transition: all 0.12s ease;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+button:hover {
+  background: #003333;
+}
+
+button:active {
+  transform: translateY(1px);
+  box-shadow: inset 0 0 10px rgba(0, 255, 213, 0.6);
+}
+
+/* Primary Add Tamagotchi Button */
+#tamagotchi-add {
+  font-family: "Press Start 2P", monospace;
+  font-size: 14px;
+  padding: 14px 20px;
+  margin: 0 auto;
+  display: block;
+  box-shadow:
+    0 0 10px rgba(0, 255, 213, 0.8),
+    inset 0 0 8px rgba(0, 255, 213, 0.35);
+}
+
+/* Activity Buttons */
+.activity-btn {
+  font-size: 18px;
+  padding: 6px 14px;
+  opacity: 0.9;
+  border-width: 1px;
+  margin: 0 3px;
+  box-shadow:
+    0 0 6px rgba(0, 255, 213, 0.5),
+    inset 0 0 4px rgba(0, 255, 213, 0.25);
+}
+
+/* Progress Bars*/
+
+progress {
+  width: 100%;
+  height: 14px;
+  appearance: none;
+  -webkit-appearance: none;
+  border: 1px solid #00ffd5;
+  background-color: #001a1a;
+  border-radius: 3px;
+}
+
+progress::-webkit-progress-bar {
+  background-color: #001a1a;
+}
+
+progress::-webkit-progress-value {
+  background-color: #00ffd5;
+  box-shadow: 0 0 6px rgba(0, 255, 213, 0.8);
+}
+
+progress::-moz-progress-bar {
+  background-color: #00ffd5;
+  box-shadow: 0 0 6px rgba(0, 255, 213, 0.8);
+}
+
+/* CRT Effects */
+
+.crt::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.15),
+    rgba(0, 0, 0, 0.15) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  mix-blend-mode: overlay;
+}
+
+.crt {
+  position: relative;
+  filter: contrast(1.1) brightness(1.05) saturate(1.2);
+  text-shadow:
+    0 0 2px rgba(0, 255, 255, 0.3),
+    0 0 6px rgba(0, 255, 255, 0.2);
+}
+
+.crt::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: inherit;
+  mix-blend-mode: screen;
+  filter: drop-shadow(1px 0 red) drop-shadow(-1px 0 blue);
+  pointer-events: none;
+}

@@ -1,8 +1,8 @@
 /*Base Styles */
 body {
   font-family: "VT323", system-ui;
-  font-size: 22px;
-  background: #001a1a; /* very dark teal */
+  font-size: 24px;
+  background: #001a1a;
   color: #00ffd5;
 }
 
@@ -64,7 +64,7 @@ img {
 .legend {
   position: absolute;
   left: 50px;
-  top: 73px;
+  top: 77px;
   border: 2px solid #00ffd5;
   box-shadow:
     0 0 6px rgba(0, 255, 213, 0.5),
@@ -89,7 +89,6 @@ img {
 }
 
 /* Buttons */
-
 button {
   font-family: "VT323", monospace;
   background: #001a1a;
@@ -116,7 +115,7 @@ button:active {
 /* Primary Add Tamagotchi Button */
 #tamagotchi-add {
   font-family: "Press Start 2P", monospace;
-  font-size: 14px;
+  font-size: 18px;
   padding: 14px 20px;
   margin: 0 auto;
   display: block;
@@ -127,7 +126,7 @@ button:active {
 
 /* Activity Buttons */
 .activity-btn {
-  font-size: 18px;
+  font-size: 22px;
   padding: 6px 14px;
   opacity: 0.9;
   border-width: 1px;
@@ -138,7 +137,6 @@ button:active {
 }
 
 /* Progress Bars*/
-
 progress {
   width: 100%;
   height: 14px;
@@ -164,7 +162,6 @@ progress::-moz-progress-bar {
 }
 
 /* CRT Effects */
-
 .crt::before {
   content: "";
   position: fixed;

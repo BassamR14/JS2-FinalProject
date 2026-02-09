@@ -294,6 +294,8 @@ class GameUI {
 }
 
 const addTamaBtn = document.querySelector("#tamagotchi-add");
-addTamaBtn.addEventListener("click", () => {
-  Game.runGame();
+addTamaBtn.addEventListener("click", async () => {
+  addTamaBtn.disabled = true;
+  await Game.runGame();
+  addTamaBtn.disabled = false;
 });

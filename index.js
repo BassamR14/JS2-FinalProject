@@ -6,6 +6,7 @@ class Tamagotchi {
     this.fullness = fullness;
     this.happiness = happiness;
     this.timer = null;
+    this.timerDisplay = null;
   }
 
   //To ensure that values remain between 0-100
@@ -33,14 +34,8 @@ class Tamagotchi {
     this.fullness = Math.max(0, this.fullness - 10);
     this.happiness = Math.max(0, this.happiness - 10);
 
-    //Check if any value reaches 0 due to decay
-    const leavingTamas = Game.checkTamagotchis();
-
-    if (leavingTamas.length > 0) {
-      Game.handleLeavingTamas(leavingTamas);
-    }
-
-    Game.render();
+    // Return tamagotchis that need to leave
+    return Game.checkTamagotchis();
   }
 
   //Since every tamagotchi has a timer, it belongs to the tamagochi class/instance
@@ -48,24 +43,27 @@ class Tamagotchi {
     let sec = 10;
 
     const tick = () => {
+      sec--;
+      //makes sure the timer never displays a negative value
+      if (sec < 0) sec = 0;
+
       this.timerDisplay.innerText = sec < 10 ? `00:0${sec}s` : `00:${sec}s`;
 
-      // decay & reset + stop the function
       if (sec === 0) {
-        this.decay();
-        sec = 10;
-        return;
-      }
+        // decay only updates stats and returns leaving tamas
+        const leavingTamas = this.decay();
 
-      sec--;
+        if (leavingTamas.length > 0) {
+          GameUI.handleLeavingTamas(leavingTamas);
+        }
+
+        GameUI.render();
+        sec = 10;
+      }
     };
 
-    //run the function then after one second, run again
     tick();
     this.timer = setInterval(tick, 1000);
-
-    //bind(this) is needed since setInterval doesn't know what this is, it becomes undefined.
-    // this.timer = setInterval(this.decay.bind(this), 10000);
   }
 }
 
@@ -104,7 +102,7 @@ class Game {
       Game.tamagotchis.push(newTama);
 
       //Render & start timer for tamagotchi
-      Game.render();
+      GameUI.render();
       newTama.startTimer();
     } catch (err) {
       console.log(err);
@@ -126,6 +124,19 @@ class Game {
   }
 
   //this code is used multiple time for the buttons, if there are any tamagotchies with any value of 0, add activity message
+
+  static async runGame() {
+    try {
+      await Game.generateTamagotchi();
+      console.log(Game.tamagotchis);
+    } catch (err) {
+      console.log(err);
+      alert("Something went wrong. Try again!");
+    }
+  }
+}
+
+class GameUI {
   static handleLeavingTamas(leavingTamas) {
     const activities = document.querySelector(".activities");
     const activityContainer = document.querySelector(".activity-container");
@@ -156,6 +167,7 @@ class Game {
   static render() {
     const container = document.querySelector(".container");
     const activities = document.querySelector(".activities");
+    const activityContainer = document.querySelector(".activity-container");
     container.innerHTML = "";
 
     Game.tamagotchis.forEach((tamagotchi) => {
@@ -212,41 +224,50 @@ class Game {
       napBtn.addEventListener("click", () => {
         tamagotchi.nap();
         const leavingTamas = Game.checkTamagotchis();
-        Game.render();
+        GameUI.render();
 
+        activityContainer.style.display = "block";
         message.innerText = `${tamagotchi.name} took a nap!`;
         activities.prepend(message);
 
-        Game.handleLeavingTamas(leavingTamas);
+        if (leavingTamas.length > 0) {
+          GameUI.handleLeavingTamas(leavingTamas);
+        }
       });
 
       playBtn.addEventListener("click", () => {
         tamagotchi.play();
         const leavingTamas = Game.checkTamagotchis();
-        Game.render();
+        GameUI.render();
 
+        activityContainer.style.display = "block";
         message.innerText = `You played with ${tamagotchi.name}!`;
         activities.prepend(message);
 
-        Game.handleLeavingTamas(leavingTamas);
+        if (leavingTamas.length > 0) {
+          GameUI.handleLeavingTamas(leavingTamas);
+        }
       });
 
       eatBtn.addEventListener("click", () => {
         tamagotchi.eat();
         const leavingTamas = Game.checkTamagotchis();
-        Game.render();
+        GameUI.render();
 
+        activityContainer.style.display = "block";
         message.innerText = `You fed ${tamagotchi.name}!`;
         activities.prepend(message);
 
-        Game.handleLeavingTamas(leavingTamas);
+        if (leavingTamas.length > 0) {
+          GameUI.handleLeavingTamas(leavingTamas);
+        }
       });
 
       //If a tamagotchi doesn't have a timer, create DOM element, if it does, reuse it.
       let timerDisplay;
       if (!tamagotchi.timerDisplay) {
         timerDisplay = document.createElement("p");
-        timerDisplay.innerText = "10s";
+        timerDisplay.innerText = "00:10s";
         tamagotchi.timerDisplay = timerDisplay;
       } else {
         timerDisplay = tamagotchi.timerDisplay;
@@ -269,16 +290,6 @@ class Game {
       );
       container.append(tamaDiv);
     });
-  }
-
-  static async runGame() {
-    try {
-      await Game.generateTamagotchi();
-      console.log(Game.tamagotchis);
-    } catch (err) {
-      console.log(err);
-      alert("Something went wrong. Try again!");
-    }
   }
 }
 

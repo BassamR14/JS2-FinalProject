@@ -37,9 +37,31 @@ class Tamagotchi {
 
   //Since every tamagotchi has a timer, it belongs to the tamagochi class/instance
   startTimer() {
-    this.timer = setInterval(() => {
-      this.decay();
-    }, 10000);
+    let sec = 10;
+
+    const tick = () => {
+      // Update countdown display
+      this.timerDisplay.innerText = sec < 10 ? `00:0${sec}s` : `00:${sec}s`;
+
+      if (sec === 0) {
+        // Decay stats
+        this.decay();
+
+        // Update UI and handle leaving Tamagotchis
+        GameUI.onDecay();
+
+        // Reset timer
+        sec = 10;
+      } else {
+        sec--;
+      }
+    };
+
+    // Run tick immediately so the timer shows without waiting 1 sec
+    tick();
+
+    // Start interval every 1 second
+    this.timer = setInterval(tick, 1000);
   }
 }
 
@@ -147,6 +169,19 @@ class GameUI {
       leavingMsg.innerText = `${tama.name} has left because their ${reasons.join(" & ")} reached 0`;
       activities.prepend(leavingMsg);
     });
+  }
+
+  static onDecay() {
+    // Check if any Tamagotchis have reached 0 and should leave
+    const leavingTamas = Game.checkTamagotchis();
+
+    // Handle leaving Tamagotchis
+    if (leavingTamas.length > 0) {
+      GameUI.handleLeavingTamas(leavingTamas);
+    }
+
+    // Re-render all Tamagotchis
+    GameUI.render();
   }
 
   static render() {

@@ -34,7 +34,7 @@ class Tamagotchi {
     this.fullness = Math.max(0, this.fullness - 10);
     this.happiness = Math.max(0, this.happiness - 10);
 
-    // Return tamagotchis that need to leave
+    // Check if tamagotchi's need to leave or stay, use in timer to update UI
     return Game.checkTamagotchis();
   }
 
@@ -43,14 +43,10 @@ class Tamagotchi {
     let sec = 10;
 
     const tick = () => {
-      sec--;
-      //makes sure the timer never displays a negative value
-      if (sec < 0) sec = 0;
-
       this.timerDisplay.innerText = sec < 10 ? `00:0${sec}s` : `00:${sec}s`;
 
       if (sec === 0) {
-        // decay only updates stats and returns leaving tamas
+        //run decay and check if any tamagotchis need to leave.
         const leavingTamas = this.decay();
 
         if (leavingTamas.length > 0) {
@@ -59,9 +55,12 @@ class Tamagotchi {
 
         GameUI.render();
         sec = 10;
+      } else {
+        sec--;
       }
     };
 
+    //run the function then after 1000ms run again.
     tick();
     this.timer = setInterval(tick, 1000);
   }
@@ -78,15 +77,25 @@ class Game {
         return;
       }
 
-      let response = await fetch("https://randomuser.me/api");
-      let data = await response.json();
+      //Name logic + fallback
+
+      let name;
+
+      try {
+        let response = await fetch("https://randomuser.me/api");
+        let data = await response.json();
+        name = `${data.results[0].name.first} ${data.results[0].name.last}`;
+      } catch {
+        alert("API is down. Name will be Random.");
+        name = "Random";
+      }
 
       //To get a random animal
       const animals = ["Tiger", "Wolf", "Dragon", "Phoenix"];
       const animalIndex = Math.floor(Math.random() * animals.length);
-
-      const name = `${data.results[0].name.first} ${data.results[0].name.last}`;
       const animalType = animals[animalIndex];
+
+      //default values
       const energy = 50;
       const fullness = 50;
       const happiness = 50;
@@ -123,8 +132,6 @@ class Game {
     return leavingTamas;
   }
 
-  //this code is used multiple time for the buttons, if there are any tamagotchies with any value of 0, add activity message
-
   static async runGame() {
     try {
       await Game.generateTamagotchi();
@@ -137,6 +144,7 @@ class Game {
 }
 
 class GameUI {
+  //this code is used multiple time for the buttons, if there are any tamagotchies with any value of 0, add activity message
   static handleLeavingTamas(leavingTamas) {
     const activities = document.querySelector(".activities");
     const activityContainer = document.querySelector(".activity-container");
@@ -295,6 +303,7 @@ class GameUI {
 
 const addTamaBtn = document.querySelector("#tamagotchi-add");
 addTamaBtn.addEventListener("click", async () => {
+  //to prevent fast button presses
   addTamaBtn.disabled = true;
   await Game.runGame();
   addTamaBtn.disabled = false;

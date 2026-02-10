@@ -36,7 +36,6 @@ class Tamagotchi {
   }
 
   //Since every tamagotchi has a timer, it belongs to the tamagochi class/instance + pass in a callback from the controller which is the Game class
-
   startTimer(decayCallback) {
     let sec = 10;
     const tick = () => {
@@ -72,7 +71,6 @@ class Game {
       }
 
       //Name logic + fallback
-
       let name;
 
       try {
@@ -121,8 +119,8 @@ class Game {
     }
   }
 
+  //Separate tamagotchis with any value/s of 0 and all values above 0
   static checkTamagotchis() {
-    //Separate tamagotchis with any value/s of 0 and all values above 0
     let leavingTamas = Game.tamagotchis.filter(
       (t) => t.energy === 0 || t.fullness === 0 || t.happiness === 0,
     );
@@ -271,11 +269,10 @@ class GameUI {
         );
       });
 
-      //If a tamagotchi doesn't have a timer, create DOM element, if it does, reuse it.
+      //If a tamagotchi doesn't have a timer DOM element, create one, if it does, reuse it.
       let timerDisplay;
       if (!tamagotchi.timerDisplay) {
         timerDisplay = document.createElement("p");
-        timerDisplay.innerText = "00:10s";
         tamagotchi.timerDisplay = timerDisplay;
       } else {
         timerDisplay = tamagotchi.timerDisplay;

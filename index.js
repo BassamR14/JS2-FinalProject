@@ -28,7 +28,7 @@ class Tamagotchi {
     this.happiness = Math.min(100, this.happiness + 5);
   }
 
-  //decay all stats by 10
+  //decay all stats by 10, used in timer
   decay() {
     this.energy = Math.max(0, this.energy - 10);
     this.fullness = Math.max(0, this.fullness - 10);
@@ -117,7 +117,7 @@ class Game {
       });
     } catch (err) {
       console.log(err);
-      alert("Something went wrong. Try again!");
+      alert("Something went wrong while generating Tamagotchi. Try again!");
     }
   }
 
@@ -140,13 +140,13 @@ class Game {
       console.log(Game.tamagotchis);
     } catch (err) {
       console.log(err);
-      alert("Something went wrong. Try again!");
+      alert("Something went wrong while running the game. Try again!");
     }
   }
 }
 
 class GameUI {
-  //this code is used multiple time for the buttons, if there are any tamagotchies with any value of 0, add activity message
+  //If there are any tamagotchies with any value of 0, add activity message + stop its timer
   static handleLeavingTamas(leavingTamas) {
     const activities = document.querySelector(".activities");
     const activityContainer = document.querySelector(".activity-container");
@@ -174,6 +174,7 @@ class GameUI {
     });
   }
 
+  //Code for activity button functions
   static btnHelperFunction(tama, activity, activityMsg) {
     activity.call(tama);
     const leavingTamas = Game.checkTamagotchis();
@@ -184,7 +185,7 @@ class GameUI {
     let message = document.createElement("p");
 
     activityContainer.style.display = "block";
-    message.innerText = `${activityMsg}!`;
+    message.innerText = activityMsg;
 
     activities.prepend(message);
 
@@ -195,8 +196,6 @@ class GameUI {
 
   static render() {
     const container = document.querySelector(".container");
-    const activities = document.querySelector(".activities");
-    const activityContainer = document.querySelector(".activity-container");
     container.innerHTML = "";
 
     Game.tamagotchis.forEach((tamagotchi) => {

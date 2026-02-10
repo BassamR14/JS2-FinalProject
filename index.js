@@ -33,36 +33,13 @@ class Tamagotchi {
     this.energy = Math.max(0, this.energy - 10);
     this.fullness = Math.max(0, this.fullness - 10);
     this.happiness = Math.max(0, this.happiness - 10);
-
-    // Check if tamagotchi's need to leave or stay, use in timer to update UI
-    return Game.checkTamagotchis();
   }
 
   //Since every tamagotchi has a timer, it belongs to the tamagochi class/instance
   startTimer() {
-    let sec = 10;
-
-    const tick = () => {
-      this.timerDisplay.innerText = sec < 10 ? `00:0${sec}s` : `00:${sec}s`;
-
-      if (sec === 0) {
-        //run decay and check if any tamagotchis need to leave.
-        const leavingTamas = this.decay();
-
-        if (leavingTamas.length > 0) {
-          GameUI.handleLeavingTamas(leavingTamas);
-        }
-
-        GameUI.render();
-        sec = 10;
-      } else {
-        sec--;
-      }
-    };
-
-    //run the function then after 1000ms run again.
-    tick();
-    this.timer = setInterval(tick, 1000);
+    this.timer = setInterval(() => {
+      this.decay();
+    }, 10000);
   }
 }
 

@@ -44,8 +44,9 @@ class Tamagotchi {
       if (sec === 0) {
         // only update internal state
         this.decay();
+
+        //if callback exists, run function for this instance
         if (decayCallback) {
-          // notify Game class
           decayCallback(this);
         }
         sec = 10;
@@ -174,6 +175,7 @@ class GameUI {
 
   //Code for activity button functions
   static btnHelperFunction(tama, activity, activityMsg) {
+    //.call: invokes function with a specific "this" context, which here would be the tamagotchi instance
     activity.call(tama);
     const leavingTamas = Game.checkTamagotchis();
     GameUI.render();

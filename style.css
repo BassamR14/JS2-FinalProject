@@ -47,7 +47,7 @@ img {
 }
 
 .activity-container {
-  height: 200px;
+  height: 250px;
   overflow: auto;
   /* width: 70%; */
   max-width: 1340px;

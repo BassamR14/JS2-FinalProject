@@ -160,12 +160,7 @@ class Game {
     Game.tamagotchis = [];
 
     //Clear UI
-    const container = document.querySelector(".container");
-    container.innerHTML = "";
-    const activities = document.querySelector(".activities");
-    activities.innerHTML = "";
-    const activityContainer = document.querySelector(".activity-container");
-    activityContainer.style.display = "none";
+    GameUI.clearUI();
   }
 
   static async runGame() {
@@ -232,6 +227,15 @@ class GameUI {
     activities.prepend(message);
 
     GameUI.render();
+  }
+
+  static clearUI() {
+    const container = document.querySelector(".container");
+    container.innerHTML = "";
+    const activities = document.querySelector(".activities");
+    activities.innerHTML = "";
+    const activityContainer = document.querySelector(".activity-container");
+    activityContainer.style.display = "none";
   }
 
   //choose the image based on animal type, make it static and outside of render so it isn't created everytime render runs.

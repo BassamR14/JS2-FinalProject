@@ -75,9 +75,9 @@ class Game {
       let name;
 
       try {
-        let response = await fetch("https://randomuser.me/api");
+        let response = await fetch("https://randomuser.me/api/0.8");
         let data = await response.json();
-        name = `${data.results[0].name.first} ${data.results[0].name.last}`;
+        name = `${data.results[0].user.name.first} ${data.results[0].user.name.last}`;
       } catch {
         alert("API is down. Name will be Random.");
         name = "Random";

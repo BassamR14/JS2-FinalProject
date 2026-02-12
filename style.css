@@ -88,6 +88,14 @@ img {
   text-shadow: 0 0 4px rgba(255, 106, 61, 0.5);
 }
 
+.material-symbols-outlined {
+  font-variation-settings:
+    "FILL" 0,
+    "wght" 300,
+    "GRAD" 0,
+    "opsz" 24;
+}
+
 /* Buttons */
 button {
   font-family: "VT323", monospace;
@@ -112,16 +120,68 @@ button:active {
   box-shadow: inset 0 0 10px rgba(0, 255, 213, 0.6);
 }
 
+/* Button Header */
+#header {
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  gap: 50px;
+}
+
 /* Primary Add Tamagotchi Button */
 #tamagotchi-add {
   font-family: "Press Start 2P", monospace;
   font-size: 18px;
   padding: 14px 20px;
-  margin: 0 auto;
-  display: block;
+
   box-shadow:
     0 0 10px rgba(0, 255, 213, 0.8),
     inset 0 0 8px rgba(0, 255, 213, 0.35);
+}
+
+/* Restart Button tooltip */
+#restart-game {
+  position: relative;
+}
+
+.tooltiptext {
+  visibility: hidden;
+  position: absolute;
+  z-index: 1;
+
+  top: 0px;
+  left: 130%;
+
+  width: 130px;
+  padding: 8px 10px;
+
+  font-family: "VT323", monospace;
+  font-size: 22px;
+  text-align: center;
+
+  color: #00ffd5;
+  background: #001a1a;
+
+  border: 2px solid #00ffd5;
+  border-radius: 4px;
+
+  box-shadow:
+    0 0 8px rgba(0, 255, 213, 0.6),
+    inset 0 0 6px rgba(0, 255, 213, 0.25);
+
+  text-shadow: 0 0 4px rgba(0, 255, 213, 0.6);
+
+  opacity: 0;
+  transform: translateX(-5px);
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
+}
+
+#restart-game:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+  transform: translateX(0);
 }
 
 /* Activity Buttons */

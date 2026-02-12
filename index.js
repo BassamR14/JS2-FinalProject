@@ -66,7 +66,7 @@ class Game {
   static async generateTamagotchi() {
     try {
       //Max 4 tamagotchis
-      if (Game.tamagotchis.length > 3) {
+      if (Game.tamagotchis.length >= 4) {
         alert("Can only have 4 Tamagotchis");
         return;
       }
@@ -108,7 +108,8 @@ class Game {
 
       // Pass a callback that handles decay render + if decay leads to leaving tamagotchis
       newTama.startTimer(() => {
-        const leavingTamas = Game.checkTamagotchis();
+        const leavingTamas = Game.getLeavingTamas();
+        Game.removeLeavingTamas();
         if (leavingTamas.length > 0) {
           GameUI.handleLeavingTamas(leavingTamas);
         }
@@ -121,16 +122,48 @@ class Game {
   }
 
   //Separate tamagotchis with any value/s of 0 and all values above 0
-  static checkTamagotchis() {
-    let leavingTamas = Game.tamagotchis.filter(
+  //This function does 2 different things, filters + mutates the array, better to seperate into 2 different functions.
+  // static checkTamagotchis() {
+  //   let leavingTamas = Game.tamagotchis.filter(
+  //     (t) => t.energy === 0 || t.fullness === 0 || t.happiness === 0,
+  //   );
+
+  //   Game.tamagotchis = Game.tamagotchis.filter(
+  //     (t) => t.energy > 0 && t.fullness > 0 && t.happiness > 0,
+  //   );
+
+  //   return leavingTamas;
+  // }
+
+  static getLeavingTamas() {
+    return Game.tamagotchis.filter(
       (t) => t.energy === 0 || t.fullness === 0 || t.happiness === 0,
     );
+  }
 
+  static removeLeavingTamas() {
     Game.tamagotchis = Game.tamagotchis.filter(
       (t) => t.energy > 0 && t.fullness > 0 && t.happiness > 0,
     );
+  }
 
-    return leavingTamas;
+  static restartGame() {
+    // Stop all running timers
+    Game.tamagotchis.forEach((tama) => {
+      if (tama.timer) {
+        clearInterval(tama.timer);
+        tama.timer = null;
+      }
+    });
+
+    //Clear game state
+    Game.tamagotchis = [];
+
+    //Clear UI
+    const container = document.querySelector(".container");
+    container.innerHTML = "";
+    const activities = document.querySelector(".activities");
+    activities.innerHTML = "";
   }
 
   static async runGame() {
@@ -154,6 +187,8 @@ class GameUI {
     leavingTamas.forEach((tama) => {
       //stop the instance's timer
       clearInterval(tama.timer);
+      //So that the timer property doesn't hold the old value
+      tama.timer = null;
 
       let reasons = [];
       if (tama.energy === 0) {
@@ -177,8 +212,13 @@ class GameUI {
   static btnHelperFunction(tama, activity, activityMsg) {
     //.call: invokes function with a specific "this" context, which here would be the tamagotchi instance
     activity.call(tama);
-    const leavingTamas = Game.checkTamagotchis();
-    GameUI.render();
+    const leavingTamas = Game.getLeavingTamas();
+
+    if (leavingTamas.length > 0) {
+      GameUI.handleLeavingTamas(leavingTamas);
+    }
+
+    Game.removeLeavingTamas();
 
     const activities = document.querySelector(".activities");
     const activityContainer = document.querySelector(".activity-container");
@@ -189,10 +229,16 @@ class GameUI {
 
     activities.prepend(message);
 
-    if (leavingTamas.length > 0) {
-      GameUI.handleLeavingTamas(leavingTamas);
-    }
+    GameUI.render();
   }
+
+  //choose the image based on animal type, make it static and outside of render so it isn't created everytime render runs.
+  static animalImages = {
+    Tiger: "tiger.jpg",
+    Wolf: "wolf.jpg",
+    Dragon: "dragon.jpg",
+    Phoenix: "phoenix.jpg",
+  };
 
   static render() {
     const container = document.querySelector(".container");
@@ -224,15 +270,7 @@ class GameUI {
       happinessBar.max = "100";
       happiness.innerText = `Happiness: ${tamagotchi.happiness}/100`;
 
-      //choose the image based on animal type
-      const animalImages = {
-        Tiger: "tiger.jpg",
-        Wolf: "wolf.jpg",
-        Dragon: "dragon.jpg",
-        Phoenix: "phoenix.jpg",
-      };
-
-      animalImage.src = animalImages[tamagotchi.animalType];
+      animalImage.src = GameUI.animalImages[tamagotchi.animalType];
 
       //Create buttons + add message of activity + check if any value reaches 0 after button press
       const btnDiv = document.createElement("div");
@@ -307,3 +345,6 @@ addTamaBtn.addEventListener("click", async () => {
   await Game.runGame();
   addTamaBtn.disabled = false;
 });
+
+const restartGameBtn = document.querySelector("#restart-game");
+restartGameBtn.addEventListener("click", Game.restartGame);

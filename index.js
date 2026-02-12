@@ -164,6 +164,8 @@ class Game {
     container.innerHTML = "";
     const activities = document.querySelector(".activities");
     activities.innerHTML = "";
+    const activityContainer = document.querySelector(".activity-container");
+    activityContainer.style.display = "none";
   }
 
   static async runGame() {

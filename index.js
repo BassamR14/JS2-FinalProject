@@ -211,10 +211,6 @@ class GameUI {
     activity.call(tama);
     const leavingTamas = Game.getLeavingTamas();
 
-    if (leavingTamas.length > 0) {
-      GameUI.handleLeavingTamas(leavingTamas);
-    }
-
     Game.removeLeavingTamas();
 
     const activities = document.querySelector(".activities");
@@ -225,6 +221,10 @@ class GameUI {
     message.innerText = activityMsg;
 
     activities.prepend(message);
+
+    if (leavingTamas.length > 0) {
+      GameUI.handleLeavingTamas(leavingTamas);
+    }
 
     GameUI.render();
   }
@@ -246,6 +246,40 @@ class GameUI {
     Phoenix: "phoenix.jpg",
   };
 
+  static createPara(paraText) {
+    const paraName = document.createElement("p");
+    paraName.innerText = paraText;
+
+    return paraName;
+  }
+
+  static createImg(imageSrc) {
+    const image = document.createElement("img");
+    image.src = imageSrc;
+    return image;
+  }
+
+  static createProgress(progressValue, progressMax, paraText) {
+    const progressName = document.createElement("progress");
+    progressName.value = progressValue;
+    progressName.max = progressMax;
+    const paraName = document.createElement("p");
+    paraName.innerText = paraText;
+
+    return {
+      progress: progressName,
+      label: paraName,
+    };
+  }
+
+  static createActivityBtn(buttonText) {
+    const buttonName = document.createElement("button");
+    buttonName.innerText = buttonText;
+    buttonName.classList.add("activity-btn");
+
+    return buttonName;
+  }
+
   static render() {
     const container = document.querySelector(".container");
     container.innerHTML = "";
@@ -254,42 +288,36 @@ class GameUI {
       //Create DOM elements for name,animal,image,energy,fullness,happiness
       const tamaDiv = document.createElement("div");
       tamaDiv.classList.add("tama-div");
-      const name = document.createElement("p");
-      const animalType = document.createElement("p");
-      const animalImage = document.createElement("img");
-      const energyBar = document.createElement("progress");
-      const energy = document.createElement("p");
-      const fullnessBar = document.createElement("progress");
-      const fullness = document.createElement("p");
-      const happinessBar = document.createElement("progress");
-      const happiness = document.createElement("p");
 
-      name.innerText = `Name: ${tamagotchi.name}`;
-      animalType.innerText = `Species: ${tamagotchi.animalType}`;
-      energyBar.value = tamagotchi.energy;
-      energyBar.max = "100";
-      energy.innerText = `Energy: ${tamagotchi.energy}/100`;
-      fullnessBar.value = tamagotchi.fullness;
-      fullnessBar.max = "100";
-      fullness.innerText = `Fullness: ${tamagotchi.fullness}/100`;
-      happinessBar.value = tamagotchi.happiness;
-      happinessBar.max = "100";
-      happiness.innerText = `Happiness: ${tamagotchi.happiness}/100`;
+      const name = GameUI.createPara(`Name: ${tamagotchi.name}`);
+      const animalType = GameUI.createPara(`Species: ${tamagotchi.animalType}`);
 
-      animalImage.src = GameUI.animalImages[tamagotchi.animalType];
+      const animalImage = GameUI.createImg(
+        GameUI.animalImages[tamagotchi.animalType],
+      );
+
+      const { progress: energyBar, label: energy } = GameUI.createProgress(
+        tamagotchi.energy,
+        100,
+        `Energy: ${tamagotchi.energy}/100`,
+      );
+      const { progress: fullnessBar, label: fullness } = GameUI.createProgress(
+        tamagotchi.fullness,
+        100,
+        `Fullness: ${tamagotchi.fullness}/100`,
+      );
+      const { progress: happinessBar, label: happiness } =
+        GameUI.createProgress(
+          tamagotchi.happiness,
+          100,
+          `Happiness: ${tamagotchi.happiness}/100`,
+        );
 
       //Create buttons + add message of activity + check if any value reaches 0 after button press
       const btnDiv = document.createElement("div");
-      const napBtn = document.createElement("button");
-      napBtn.classList.add("activity-btn");
-      const playBtn = document.createElement("button");
-      playBtn.classList.add("activity-btn");
-      const eatBtn = document.createElement("button");
-      eatBtn.classList.add("activity-btn");
-
-      napBtn.innerText = "Nap";
-      playBtn.innerText = "Play";
-      eatBtn.innerText = "Eat";
+      const napBtn = GameUI.createActivityBtn("Nap");
+      const playBtn = GameUI.createActivityBtn("Play");
+      const eatBtn = GameUI.createActivityBtn("Eat");
 
       napBtn.addEventListener("click", () => {
         GameUI.btnHelperFunction(

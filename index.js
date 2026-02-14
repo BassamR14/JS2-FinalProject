@@ -246,6 +246,7 @@ class GameUI {
     Phoenix: "phoenix.jpg",
   };
 
+  //Functions for DOM creation
   static createPara(paraText) {
     const paraName = document.createElement("p");
     paraName.innerText = paraText;
@@ -278,6 +279,12 @@ class GameUI {
     buttonName.classList.add("activity-btn");
 
     return buttonName;
+  }
+
+  //Hide activity section function
+  static hideActivity() {
+    const activityContainer = document.querySelector(".activity-container");
+    activityContainer.style.display = "none";
   }
 
   static render() {
@@ -382,3 +389,6 @@ addTamaBtn.addEventListener("click", async () => {
 
 const restartGameBtn = document.querySelector("#restart-game");
 restartGameBtn.addEventListener("click", Game.restartGame);
+
+const hideBtn = document.querySelector(".hide-btn");
+hideBtn.addEventListener("click", GameUI.hideActivity);

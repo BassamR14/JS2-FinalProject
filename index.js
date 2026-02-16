@@ -71,16 +71,9 @@ class Tamagotchi {
 class Game {
   static tamagotchis = [];
 
-  static async generateTamagotchi() {
-    //Max 4 tamagotchis
-    if (Game.tamagotchis.length >= 4) {
-      alert("Can only have 4 Tamagotchis");
-      return;
-    }
-
-    //Name logic + backup API + fallback
+  //Name logic + backup API + fallback
+  static async fetchName() {
     let name;
-
     try {
       let response = await fetch("https://randomuser.me/api");
 
@@ -112,6 +105,18 @@ class Game {
         name = "Random";
       }
     }
+
+    return name;
+  }
+
+  static async generateTamagotchi() {
+    //Max 4 tamagotchis
+    if (Game.tamagotchis.length >= 4) {
+      alert("Can only have 4 Tamagotchis");
+      return;
+    }
+
+    const name = await Game.fetchName();
 
     //To get a random animal
     const animals = ["Tiger", "Wolf", "Dragon", "Phoenix"];

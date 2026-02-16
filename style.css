@@ -269,3 +269,45 @@ progress::-moz-progress-bar {
   filter: drop-shadow(1px 0 red) drop-shadow(-1px 0 blue);
   pointer-events: none;
 }
+
+/* Boot-up screen */
+
+#boot-screen {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  color: #00ffd5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "VT323", monospace;
+  font-size: 28px;
+  z-index: 10000;
+}
+
+.boot-text {
+  text-shadow: 0 0 6px rgba(0, 255, 213, 0.8);
+  white-space: pre-line;
+}
+
+.hidden {
+  display: none;
+}
+
+@keyframes powerOn {
+  0% {
+    transform: scaleY(0.02);
+    opacity: 0;
+  }
+  50% {
+    transform: scaleY(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scaleY(1);
+  }
+}
+
+#boot-screen.power-on {
+  animation: powerOn 0.4s ease-out forwards;
+}

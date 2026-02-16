@@ -7,6 +7,14 @@ class Tamagotchi {
     this.happiness = happiness;
     this.timer = null;
     this.timerDisplay = null;
+
+    //To update UI - DOM references
+    this.energyBar = null;
+    this.energyText = null;
+    this.fullnessBar = null;
+    this.fullnessText = null;
+    this.happinessBar = null;
+    this.happinessText = null;
   }
 
   //To ensure that values remain between 0-100
@@ -64,61 +72,80 @@ class Game {
   static tamagotchis = [];
 
   static async generateTamagotchi() {
+    //Max 4 tamagotchis
+    if (Game.tamagotchis.length >= 4) {
+      alert("Can only have 4 Tamagotchis");
+      return;
+    }
+
+    //Name logic + backup API + fallback
+    let name;
+
     try {
-      //Max 4 tamagotchis
-      if (Game.tamagotchis.length >= 4) {
-        alert("Can only have 4 Tamagotchis");
-        return;
+      let response = await fetch("https://randomuser.me/api");
+
+      if (!response.ok) {
+        throw new Error("Primary API failed");
       }
 
-      //Name logic + fallback
-      let name;
+      let data = await response.json();
+      name = `${data.results[0].name.first} ${data.results[0].name.last}`;
+    } catch (err) {
+      console.warn(
+        "There is a problem with the connection to the API. An older version of the API will be used.",
+        err,
+      );
 
       try {
-        let response = await fetch("https://randomuser.me/api/0.8");
-        let data = await response.json();
-        name = `${data.results[0].user.name.first} ${data.results[0].user.name.last}`;
-      } catch {
-        alert("API is down. Name will be Random.");
+        let backupResponse = await fetch("https://randomuser.me/api/0.8");
+
+        if (!backupResponse.ok) {
+          throw new Error("Secondary API failed");
+        }
+
+        let backupData = await backupResponse.json();
+        name = `${backupData.results[0].user.name.first} ${backupData.results[0].user.name.last}`;
+      } catch (err) {
+        alert(
+          "There is a problem with the connection to the backup API. Name will be Random.",
+        );
         name = "Random";
       }
-
-      //To get a random animal
-      const animals = ["Tiger", "Wolf", "Dragon", "Phoenix"];
-      const animalIndex = Math.floor(Math.random() * animals.length);
-      const animalType = animals[animalIndex];
-
-      //default values
-      const energy = 50;
-      const fullness = 50;
-      const happiness = 50;
-
-      //Create a new tamagotchi and push into array
-      const newTama = new Tamagotchi(
-        name,
-        animalType,
-        energy,
-        fullness,
-        happiness,
-      );
-      Game.tamagotchis.push(newTama);
-
-      //Render & start timer for tamagotchi
-      GameUI.render();
-
-      // Pass a callback that handles decay render + if decay leads to leaving tamagotchis
-      newTama.startTimer(() => {
-        const leavingTamas = Game.getLeavingTamas();
-        Game.removeLeavingTamas();
-        if (leavingTamas.length > 0) {
-          GameUI.handleLeavingTamas(leavingTamas);
-        }
-        GameUI.render();
-      });
-    } catch (err) {
-      console.log(err);
-      alert("Something went wrong while generating Tamagotchi. Try again!");
     }
+
+    //To get a random animal
+    const animals = ["Tiger", "Wolf", "Dragon", "Phoenix"];
+    const animalIndex = Math.floor(Math.random() * animals.length);
+    const animalType = animals[animalIndex];
+
+    //default values
+    const energy = 50;
+    const fullness = 50;
+    const happiness = 50;
+
+    //Create a new tamagotchi and push into array
+    const newTama = new Tamagotchi(
+      name,
+      animalType,
+      energy,
+      fullness,
+      happiness,
+    );
+    Game.tamagotchis.push(newTama);
+
+    //Render & start timer for tamagotchi
+    GameUI.render();
+
+    // Pass a callback that handles decay render + if decay leads to leaving tamagotchis
+    newTama.startTimer(() => {
+      const leavingTamas = Game.getLeavingTamas();
+      Game.removeLeavingTamas();
+      if (leavingTamas.length > 0) {
+        GameUI.handleLeavingTamas(leavingTamas);
+        GameUI.render();
+      }
+      GameUI.updateUI();
+    });
   }
 
   //Separate tamagotchis with any value/s of 0 and all values above 0
@@ -161,16 +188,13 @@ class Game {
 
     //Clear UI
     GameUI.clearUI();
+
+    GameUI.startBootSequence();
   }
 
   static async runGame() {
-    try {
-      await Game.generateTamagotchi();
-      console.log(Game.tamagotchis);
-    } catch (err) {
-      console.log(err);
-      alert("Something went wrong while running the game. Try again!");
-    }
+    await Game.generateTamagotchi();
+    console.log(Game.tamagotchis);
   }
 }
 
@@ -224,9 +248,10 @@ class GameUI {
 
     if (leavingTamas.length > 0) {
       GameUI.handleLeavingTamas(leavingTamas);
+      GameUI.render();
     }
 
-    GameUI.render();
+    GameUI.updateUI();
   }
 
   static clearUI() {
@@ -320,6 +345,14 @@ class GameUI {
           `Happiness: ${tamagotchi.happiness}/100`,
         );
 
+      //Save references
+      tamagotchi.energyBar = energyBar;
+      tamagotchi.energyText = energy;
+      tamagotchi.fullnessBar = fullnessBar;
+      tamagotchi.fullnessText = fullness;
+      tamagotchi.happinessBar = happinessBar;
+      tamagotchi.happinessText = happiness;
+
       //Create buttons + add message of activity + check if any value reaches 0 after button press
       const btnDiv = document.createElement("div");
       const napBtn = GameUI.createActivityBtn("Nap");
@@ -377,6 +410,79 @@ class GameUI {
       container.append(tamaDiv);
     });
   }
+
+  static updateUI() {
+    Game.tamagotchis.forEach((tama) => {
+      tama.energyBar.value = tama.energy;
+      tama.energyText.innerText = `Energy: ${tama.energy}/100`;
+
+      tama.fullnessBar.value = tama.fullness;
+      tama.fullnessText.innerText = `Fullness: ${tama.fullness}/100`;
+
+      tama.happinessBar.value = tama.happiness;
+      tama.happinessText.innerText = `Happiness: ${tama.happiness}/100`;
+    });
+  }
+
+  //Bootup-Screen
+  static startBootSequence() {
+    const bootScreen = document.getElementById("boot-screen");
+    const bootText = document.querySelector(".boot-text");
+    const app = document.getElementById("app");
+
+    const lines = [
+      "TAMAGOTCHI OS v1.0",
+      "Initializing system...",
+      "Loading...",
+      "System ready.",
+    ];
+
+    //For restart game function:
+    //Reset visual state
+    bootText.textContent = "";
+    app.classList.add("hidden");
+    bootScreen.style.display = "flex";
+
+    //Reset animation so it can replay
+    // force reflow (forced layout recalculation)
+    //  Browsers optimize performance by batching DOM reads and writes. If you remove a class and immediately re-add it,the browser may treat both operations as part of the same layout update.
+    //  Void - simply evaluates the expression and discards the result. bootScreen.offsetWidth is a layout property. Reading it forces the browser to recalculate layout.
+    bootScreen.classList.remove("power-on");
+    void bootScreen.offsetWidth;
+    bootScreen.classList.add("power-on");
+
+    //Track where we are in the typing process
+    //Which line we are typing
+    let lineIndex = 0;
+    //Which characters inside that line
+    let charIndex = 0;
+
+    function typeLine() {
+      if (lineIndex < lines.length) {
+        if (charIndex < lines[lineIndex].length) {
+          //Type each character for the line we are on
+          bootText.textContent += lines[lineIndex][charIndex];
+          charIndex++;
+          setTimeout(typeLine, 40);
+        } else {
+          //go to next line and reset character index
+          bootText.textContent += "\n";
+          lineIndex++;
+          charIndex = 0;
+          setTimeout(typeLine, 400);
+        }
+      } else {
+        //After going through all the lines
+        setTimeout(() => {
+          bootScreen.style.display = "none";
+          app.classList.remove("hidden");
+        }, 800);
+      }
+    }
+
+    bootScreen.classList.add("power-on");
+    setTimeout(typeLine, 500);
+  }
 }
 
 const addTamaBtn = document.querySelector("#tamagotchi-add");
@@ -392,3 +498,6 @@ restartGameBtn.addEventListener("click", Game.restartGame);
 
 const hideBtn = document.querySelector(".hide-btn");
 hideBtn.addEventListener("click", GameUI.hideActivity);
+
+//DOMcontentLoaded : Wait for the page to fully load
+document.addEventListener("DOMContentLoaded", GameUI.startBootSequence);

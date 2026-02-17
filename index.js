@@ -295,7 +295,7 @@ class GameUI {
     pgName.innerText = pgText;
 
     return {
-      progress: progressName,
+      progress: progressBar,
       label: pgName,
     };
   }

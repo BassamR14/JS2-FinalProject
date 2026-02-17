@@ -4,26 +4,52 @@ body {
   font-size: 24px;
   background: #001a1a;
   color: #00ffd5;
+  background: radial-gradient(
+    circle at center,
+    #003333 0%,
+    #001a1a 60%,
+    #000c0c 100%
+  );
+}
+
+#app {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 20px 20px;
+
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 20px;
+
+  min-height: 80vh;
+
+  border-radius: 12px;
+  border: 2px solid #00ffd5;
+
+  box-shadow:
+    0 0 30px rgba(0, 255, 213, 0.5),
+    inset 0 0 40px rgba(0, 255, 213, 0.08);
 }
 
 h1 {
-  /* margin-top: 10px; */
   font-family: "Press Start 2P", system-ui;
   font-size: 20px;
 }
 
 img {
-  max-width: 300px;
-  height: 300px;
+  max-width: 200px;
+  height: 200px;
   margin: 10px 0;
 }
 
 .container {
-  margin-top: 20px;
+  max-width: 100%;
+
   display: flex;
   gap: 20px;
+
   justify-content: center;
-  max-width: 100%;
+  align-content: flex-start;
 }
 
 .tama-div {
@@ -49,36 +75,88 @@ img {
 .activity-container {
   height: 250px;
   overflow: auto;
-  /* width: 70%; */
-  max-width: 1340px;
   margin: 10px auto;
   padding: 0 7px;
+  box-sizing: border-box;
   border: 2px solid #00ffd5;
   box-shadow:
     0 0 6px rgba(0, 255, 213, 0.5),
     inset 0 0 6px rgba(0, 255, 213, 0.15);
   border-radius: 4px;
-  display: none;
+  width: 80%;
 }
 
-.legend {
+.activity-container:hover {
+  cursor: default;
+}
+
+.activities p {
+  border-left: 3px solid #00ffd5;
+  padding-left: 8px;
+  margin: 6px 0;
+}
+
+.legend-container {
+  position: relative;
+}
+
+.legend-container:hover {
+  cursor: default;
+}
+
+.legend-container:hover .legend-tooltip {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+}
+
+.legend-tooltip {
   position: absolute;
-  left: 50px;
-  top: 77px;
+  top: 0;
+  right: 130%;
+  width: 150px;
+
+  background: black;
+  font-size: 24px;
   border: 2px solid #00ffd5;
+  border-radius: 4px;
+  padding: 10px;
+
   box-shadow:
     0 0 6px rgba(0, 255, 213, 0.5),
     inset 0 0 6px rgba(0, 255, 213, 0.15);
-  padding: 10px;
+
+  opacity: 0;
+  transform: translateX(5px);
+  pointer-events: none;
+
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
+}
+
+.legend-tooltip p {
+  margin: 10px 0;
+  padding: 8px;
+
+  border: 1px solid rgba(0, 255, 213, 0.4);
+  background: rgba(0, 255, 213, 0.05);
   border-radius: 4px;
+
+  transition: 0.2s ease;
+
+  text-align: left;
 }
 
-.legend p {
-  margin: 5px 0;
-  font-size: 22px;
+.legend-tooltip p:first-of-type {
+  border: none;
+  text-align: center;
+  font-size: 30px;
+  padding: 0;
+  margin: 0;
 }
 
-.legend p span {
+.legend-tooltip p span {
   display: flex;
   flex-direction: column;
 }
@@ -88,6 +166,7 @@ img {
   text-shadow: 0 0 4px rgba(255, 106, 61, 0.5);
 }
 
+/* Icons */
 .material-symbols-outlined {
   font-variation-settings:
     "FILL" 0,
@@ -113,6 +192,9 @@ button {
 
 button:hover {
   background: #003333;
+  box-shadow:
+    0 0 12px rgba(0, 255, 213, 0.9),
+    inset 0 0 6px rgba(0, 255, 213, 0.4);
 }
 
 button:active {
@@ -194,20 +276,6 @@ button:active {
   box-shadow:
     0 0 6px rgba(0, 255, 213, 0.5),
     inset 0 0 4px rgba(0, 255, 213, 0.25);
-}
-
-/* Hide button */
-.activity-header-button {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.hide-btn {
-  align-self: baseline;
-  padding: 10px;
-  margin-top: 5px;
-  font-size: 20px;
 }
 
 /* Progress Bars*/

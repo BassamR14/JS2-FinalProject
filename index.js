@@ -207,8 +207,6 @@ class GameUI {
   //If there are any tamagotchies with any value of 0, add activity message + stop its timer
   static handleLeavingTamas(leavingTamas) {
     const activities = document.querySelector(".activities");
-    const activityContainer = document.querySelector(".activity-container");
-    activityContainer.style.display = "block";
 
     leavingTamas.forEach((tama) => {
       //stop the instance's timer
@@ -243,10 +241,7 @@ class GameUI {
     Game.removeLeavingTamas();
 
     const activities = document.querySelector(".activities");
-    const activityContainer = document.querySelector(".activity-container");
     let message = document.createElement("p");
-
-    activityContainer.style.display = "block";
     message.innerText = activityMsg;
 
     activities.prepend(message);
@@ -264,8 +259,6 @@ class GameUI {
     container.innerHTML = "";
     const activities = document.querySelector(".activities");
     activities.innerHTML = "";
-    const activityContainer = document.querySelector(".activity-container");
-    activityContainer.style.display = "none";
   }
 
   //choose the image based on animal type, make it static and outside of render so it isn't created everytime render runs.
@@ -309,12 +302,6 @@ class GameUI {
     buttonName.classList.add("activity-btn");
 
     return buttonName;
-  }
-
-  //Hide activity section function
-  static hideActivity() {
-    const activityContainer = document.querySelector(".activity-container");
-    activityContainer.style.display = "none";
   }
 
   static render() {
@@ -500,9 +487,6 @@ addTamaBtn.addEventListener("click", async () => {
 
 const restartGameBtn = document.querySelector("#restart-game");
 restartGameBtn.addEventListener("click", Game.restartGame);
-
-const hideBtn = document.querySelector(".hide-btn");
-hideBtn.addEventListener("click", GameUI.hideActivity);
 
 //DOMcontentLoaded : Wait for the page to fully load
 document.addEventListener("DOMContentLoaded", GameUI.startBootSequence);

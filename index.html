@@ -10,8 +10,9 @@
       rel="stylesheet" />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=restart_alt" />
-    <title>Document</title>
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+    <title>Tamagotchi Game</title>
     <script src="index.js" defer></script>
     <link rel="stylesheet" href="style.css" />
   </head>
@@ -22,6 +23,36 @@
 
     <div id="app" class="hidden">
       <div id="header">
+        <button class="legend-container">
+          <span class="material-symbols-outlined"> menu_book </span>
+          <div class="legend-tooltip">
+            <p>Legend</p>
+            <p>
+              <i>Nap:</i>
+              <span>
+                <span>Energy +40</span>
+                <span>Fullness -10</span>
+                <span>Happiness -10</span>
+              </span>
+            </p>
+            <p>
+              <i>Play:</i>
+              <span>
+                <span>Energy -10</span>
+                <span>Fullness -10</span>
+                <span>Happiness +30</span>
+              </span>
+            </p>
+            <p>
+              <i>Eat:</i>
+              <span>
+                <span>Energy -15</span>
+                <span>Fullness +30</span>
+                <span>Happiness +5</span>
+              </span>
+            </p>
+          </div>
+        </button>
         <button id="tamagotchi-add">Add Tamagotchi</button>
         <button id="restart-game">
           <span class="material-symbols-outlined"> restart_alt </span>
@@ -29,38 +60,10 @@
         </button>
       </div>
 
-      <div class="legend">
-        <p>
-          <i>Nap:</i>
-          <span>
-            <span>Energy +40</span>
-            <span>Fullness -10</span>
-            <span>Happiness -10</span>
-          </span>
-        </p>
-        <p>
-          <i>Play:</i>
-          <span>
-            <span>Energy -10</span>
-            <span>Fullness -10</span>
-            <span>Happiness +30</span>
-          </span>
-        </p>
-        <p>
-          <i>Eat:</i>
-          <span>
-            <span>Energy -15</span>
-            <span>Fullness +30</span>
-            <span>Happiness +5</span>
-          </span>
-        </p>
-      </div>
       <div class="container"></div>
       <div class="activity-container">
-        <div class="activity-header-button">
-          <h1>Activity</h1>
-          <button class="hide-btn">Hide</button>
-        </div>
+        <h1>Activity</h1>
+
         <div class="activities"></div>
       </div>
     </div>

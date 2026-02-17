@@ -274,11 +274,11 @@ class GameUI {
   };
 
   //Functions for DOM creation
-  static createPara(paraText) {
-    const paraName = document.createElement("p");
-    paraName.innerText = paraText;
+  static createPg(pgText) {
+    const pgName = document.createElement("p");
+    pgName.innerText = pgText;
 
-    return paraName;
+    return pgName;
   }
 
   static createImg(imageSrc) {
@@ -287,16 +287,16 @@ class GameUI {
     return image;
   }
 
-  static createProgress(progressValue, progressMax, paraText) {
-    const progressName = document.createElement("progress");
-    progressName.value = progressValue;
-    progressName.max = progressMax;
-    const paraName = document.createElement("p");
-    paraName.innerText = paraText;
+  static createProgress(progressValue, progressMax, pgText) {
+    const progressBar = document.createElement("progress");
+    progressBar.value = progressValue;
+    progressBar.max = progressMax;
+    const pgName = document.createElement("p");
+    pgName.innerText = pgText;
 
     return {
       progress: progressName,
-      label: paraName,
+      label: pgName,
     };
   }
 
@@ -317,8 +317,8 @@ class GameUI {
       const tamaDiv = document.createElement("div");
       tamaDiv.classList.add("tama-div");
 
-      const name = GameUI.createPara(`Name: ${tamagotchi.name}`);
-      const animalType = GameUI.createPara(`Species: ${tamagotchi.animalType}`);
+      const name = GameUI.createPg(`Name: ${tamagotchi.name}`);
+      const animalType = GameUI.createPg(`Species: ${tamagotchi.animalType}`);
 
       const animalImage = GameUI.createImg(
         GameUI.animalImages[tamagotchi.animalType],

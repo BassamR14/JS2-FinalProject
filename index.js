@@ -236,6 +236,9 @@ class GameUI {
   static btnHelperFunction(tama, activity, activityMsg) {
     //.call: invokes function with a specific "this" context, which here would be the tamagotchi instance
     activity.call(tama);
+
+    //Or call it as a method of the object, in this case activity would be "nap","play","eat"
+    // tama[activity]();
     const leavingTamas = Game.getLeavingTamas();
 
     Game.removeLeavingTamas();

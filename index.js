@@ -99,6 +99,7 @@ class Game {
         let backupData = await backupResponse.json();
         name = `${backupData.results[0].user.name.first} ${backupData.results[0].user.name.last}`;
       } catch (err) {
+        console.warn(err);
         alert(
           "There is a problem with the connection to the backup API. Name will be Random.",
         );

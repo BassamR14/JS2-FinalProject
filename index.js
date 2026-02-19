@@ -55,7 +55,7 @@ class Tamagotchi {
 
         //if callback exists, run function for this instance
         if (decayCallback) {
-          decayCallback(this);
+          decayCallback();
         }
         sec = 10;
       } else {
